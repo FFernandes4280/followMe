@@ -1,0 +1,3 @@
+/home/ffernandes/followMe/build/CMakeFiles/followMe.dir
+/home/ffernandes/followMe/build/CMakeFiles/edit_cache.dir
+/home/ffernandes/followMe/build/CMakeFiles/rebuild_cache.dir
