@@ -1,0 +1,3 @@
+[submodule "red-bull"]
+	path = red-bull
+	url = https://github.com/yumiowari/red-bull.git
