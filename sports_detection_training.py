@@ -61,8 +61,19 @@ class SportsDetectionTrainer:
         return config_path
     
     
+    def check_redbull_dataset(self):
+        """Verifica se o dataset do Red Bull está disponível"""
+        dataset_config = self.data_dir / "dataset.yaml"
+        if dataset_config.exists():
+            print("✅ Dataset do Red Bull encontrado!")
+            return True
+        else:
+            print("❌ Dataset do Red Bull não encontrado!")
+            print("Execute primeiro: python redbull_dataset_processor.py")
+            return False
+    
     def create_synthetic_dataset(self):
-        """Cria um dataset sintético para demonstração"""
+        """Cria um dataset sintético para demonstração (fallback)"""
         print("🎨 Criando dataset sintético para demonstração...")
         
         # Cria imagens sintéticas com pessoas fazendo esportes
@@ -230,23 +241,31 @@ class SportsDetectionTrainer:
 
 def main():
     """Função principal"""
-    print("🏃‍♂️ Sistema de Treinamento para Detecção de Pessoas em Esportes")
-    print("=" * 60)
+    print("🏃‍♂️ Sistema de Treinamento com Dataset Red Bull")
+    print("=" * 50)
     
     # Inicializa o treinador
     trainer = SportsDetectionTrainer(model_size="n")
     
-    # Cria dataset sintético para demonstração
-    trainer.create_synthetic_dataset()
+    # Verifica se o dataset do Red Bull está disponível
+    if not trainer.check_redbull_dataset():
+        print("❌ Dataset do Red Bull não encontrado!")
+        print("Execute primeiro: python3 redbull_dataset_processor.py")
+        return
+    
+    print("🎬 Usando dataset do Red Bull para treinamento!")
     
     # Treina o modelo
     print("\n🚀 Iniciando treinamento...")
     results = trainer.train_model(epochs=10, batch_size=8)
     
     if results:
-        # Valida o modelo
-        print("\n🔍 Validando modelo...")
-        trainer.validate_model()
+        # Copia o modelo para o diretório principal
+        import shutil
+        best_model = "runs/detect/sports_detection/weights/best.pt"
+        if os.path.exists(best_model):
+            shutil.copy2(best_model, "sports_detection_best.pt")
+            print("✓ Modelo copiado para: sports_detection_best.pt")
         
         # Exporta o modelo
         print("\n📤 Exportando modelo...")
@@ -257,6 +276,7 @@ def main():
         print("  - sports_detection_best.pt (modelo PyTorch)")
         print("  - sports_detection_best.onnx (modelo ONNX)")
         print("  - runs/detect/sports_detection/ (logs e métricas)")
+        print("\n🚀 Para usar o sistema: python3 followMe.py")
     else:
         print("❌ Falha no treinamento!")
 

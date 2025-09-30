@@ -1,1 +1,33 @@
+# Arquivos de treinamento e modelos grandes
+runs/
+sports_data/
+*.pt
+*.onnx
+*.weights
+
+# Ambiente virtual
 venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Logs
+logs/
+*.log
+
+# Arquivos temporários
+.DS_Store
+Thumbs.db
+*.tmp
+*.temp
+
+# Arquivos de IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Arquivos de sistema
+*.bak
+*.backup

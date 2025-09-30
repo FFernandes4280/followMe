@@ -1,345 +1,212 @@
-# 🏃‍♂️ Sistema de Detecção de Pessoas em Esportes
+# 🏃‍♂️ Sistema FollowMe com Dataset Red Bull
 
-Sistema completo de detecção de pessoas praticando esportes baseado no YOLOv8, desenvolvido a partir do projeto followMe original.
+Sistema de detecção e seguimento de pessoas em esportes usando YOLOv8 treinado especificamente com dataset do Red Bull.
 
-## 📋 Visão Geral
+## 🎯 Características
 
-Este projeto implementa um sistema de detecção de pessoas em esportes que inclui:
+- **Dataset Red Bull**: Treinado com vídeos reais de esportes extremos do Red Bull
+- **Detecção em Tempo Real**: Usa YOLOv8 para detectar pessoas em vídeo ao vivo
+- **Sistema de Comandos**: Gera comandos de movimento baseado na posição das pessoas
+- **Grade 3x3**: Divide a imagem em 9 quadrantes para análise de ocupação
+- **Processamento Automático**: Extrai frames e gera anotações automaticamente
+- **Alta Precisão**: 95.99% de precisão e 92.06% mAP50
 
-- **Treinamento de modelo personalizado** para detecção de pessoas em esportes
-- **Preparação de datasets** com suporte a múltiplos formatos
-- **Validação e teste** com métricas detalhadas
-- **Detecção em tempo real** com interface visual
-- **Sistema de comandos de movimento** baseado em grade 3x3
-
-## 🚀 Instalação
+## 🚀 Instalação Rápida
 
 ### Pré-requisitos
 
 - Python 3.8+
-- CUDA (opcional, para aceleração GPU)
-- Câmera USB (para detecção em tempo real)
+- OpenCV
+- PyTorch
+- Ultralytics YOLOv8
+- Scikit-learn
 
-### Instalação das Dependências
-
-#### Opção 1: Instalação com Ambiente Virtual (Recomendado)
-
-```bash
-# Clone o repositório
-git clone <repository-url>
-cd followMe
-
-# Instalação com ambiente virtual (resolve erro "externally-managed-environment")
-python3 setup_venv.py
-
-# Para usar o sistema
-./activate_and_run.sh
-# ou no Windows: activate_and_run.bat
-```
-
-#### Opção 2: Instalação Direta
+### Instalação
 
 ```bash
 # Clone o repositório
 git clone <repository-url>
 cd followMe
-
-# Instale as dependências
-python3 -m pip install -r requirements.txt
-
-# Se der erro "externally-managed-environment", use a Opção 1
-```
-
-#### Opção 3: Instalação Manual
-
-```bash
-# Clone o repositório
-git clone <repository-url>
-cd followMe
-
-# Cria ambiente virtual
-python3 -m venv venv
 
 # Ativa ambiente virtual
-source venv/bin/activate  # Linux/macOS
-# ou venv\Scripts\activate  # Windows
+source venv/bin/activate
 
-# Instala dependências
-pip install -r requirements.txt
+# Instala dependências se necessário
+pip install scikit-learn
+```
+
+## 🎮 Uso
+
+### Execução Completa (Recomendado)
+
+```bash
+python3 run_redbull_system.py
+```
+
+Este comando executa todo o pipeline automaticamente:
+1. Processa vídeos do Red Bull
+2. Treina o modelo
+3. Executa o sistema de seguimento
+
+### Uso Individual
+
+1. **Processar dataset do Red Bull:**
+```bash
+python3 redbull_dataset_processor.py
+```
+
+2. **Treinar modelo:**
+```bash
+python3 sports_detection_training.py
+```
+
+3. **Executar sistema:**
+```bash
+python3 followMe.py
 ```
 
 ## 📁 Estrutura do Projeto
 
 ```
 followMe/
-├── followMe.py                    # Script original de follow-me
-├── sports_detection_training.py   # Treinamento do modelo personalizado
-├── dataset_preparation.py         # Preparação de datasets
-├── model_validation.py           # Validação e teste do modelo
-├── sports_detection_realtime.py  # Detecção em tempo real
-├── sports_detection_system.py    # Sistema unificado (recomendado)
-├── setup_venv.py                 # Instalação com ambiente virtual
-├── launcher_venv.py              # Launcher principal
-├── activate_and_run.sh           # Script de ativação (Linux/macOS)
-├── activate_and_run.bat          # Script de ativação (Windows)
-├── config.yaml                   # Configurações do sistema
-├── requirements.txt              # Dependências Python
-├── README.md                     # Esta documentação
-└── venv/                         # Ambiente virtual (criado automaticamente)
+├── run_redbull_system.py           # Script principal (executa tudo)
+├── redbull_dataset_processor.py    # Processamento do dataset Red Bull
+├── sports_detection_training.py    # Treinamento do modelo
+├── followMe.py                     # Sistema principal com comandos
+├── model_validation.py             # Validação de modelos
+├── config.yaml                     # Configurações
+├── red-bull/                       # Vídeos do Red Bull
+│   └── src/                        # 7 vídeos de esportes extremos
+├── sports_data/                    # Dataset processado
+│   ├── images/                     # Frames extraídos (train/val/test)
+│   ├── labels/                     # Anotações YOLO
+│   └── dataset.yaml                # Configuração do dataset
+├── sports_detection_best.pt        # Modelo PyTorch treinado
+├── sports_detection_best.onnx      # Modelo ONNX
+└── runs/detect/                    # Logs de treinamento
 ```
 
-## 🎯 Uso Rápido
+## 🎬 Dataset Red Bull
 
-### 🚀 Inicialização Rápida (Recomendado)
+O sistema usa vídeos reais do Red Bull como dataset de treinamento:
 
-```bash
-# Instalação e configuração automática
-python3 setup_venv.py
+- **7 vídeos** de esportes extremos
+- **280 frames** extraídos automaticamente (a cada 30 frames)
+- **188 frames** com detecções válidas de pessoas
+- **Anotações automáticas** geradas usando YOLOv8n
+- **Divisão**: 131 treino, 28 validação, 29 teste
 
-# Executa o sistema
-./activate_and_run.sh
-# ou no Windows: activate_and_run.bat
+### Vídeos Incluídos:
+- "Attempts We Can Still Feel.mp4"
+- "Falls Won't Stop Him.mp4"
+- "He's Riding On One Wheel... Over Water.mp4"
+- "The Ramp Life Chose Him.mp4"
+- "This Is NOT Your Average Cycle Ride.mp4"
+- "When The Whole City Becomes A Bike Park.mp4"
+- "World's Longest Railslide On A Wakeboard.mp4"
+
+## 🎮 Comandos de Movimento
+
+O sistema gera comandos baseado na posição das pessoas na grade 3x3:
+
+- **`SEGUIR_FRENTE`**: Pessoa no centro da imagem
+- **`VIRAR_ESQUERDA`**: Pessoa na coluna esquerda
+- **`VIRAR_DIREITA`**: Pessoa na coluna direita
+- **`INCLINAR_PARA_CIMA`**: Pessoa na linha superior
+- **`INCLINAR_PARA_BAIXO`**: Pessoa na linha inferior
+- **`RECUAR`**: Múltiplas pessoas detectadas
+- **`Alvo perdido`**: Nenhuma pessoa detectada
+
+## 🎛️ Controles
+
+- **'q'**: Sair do sistema
+- **'o'**: Alternar exibição da grade de ocupação no terminal
+
+## 📊 Resultados de Treinamento
+
+Com 10 épocas de treinamento no dataset Red Bull:
+
+| Métrica | Valor |
+|---------|-------|
+| **Precisão** | 95.99% |
+| **Recall** | 82.35% |
+| **mAP50** | 92.06% |
+| **mAP50-95** | 60.42% |
+
+## ⚙️ Configuração
+
+Edite o arquivo `config.yaml` para personalizar:
+
+```yaml
+# Configurações do Red Bull
+dataset:
+  redbull:
+    video_dir: "red-bull/src"
+    frame_interval: 30
+    max_frames_per_video: 100
+    detection_confidence: 0.4
+
+# Configurações de treinamento
+training:
+  epochs: 10
+  batch_size: 8
+  image_size: 640
 ```
-
-### 🎮 Sistema Unificado
-
-```bash
-# Interface principal com todas as funcionalidades
-python3 sports_detection_system.py
-```
-
-### 1. Treinamento do Modelo
-
-```bash
-# Treina um modelo personalizado para detecção de esportes
-python3 sports_detection_training.py
-```
-
-### 2. Detecção em Tempo Real
-
-```bash
-# Executa detecção em tempo real com câmera
-python3 sports_detection_realtime.py
-
-# Com parâmetros personalizados
-python3 sports_detection_realtime.py --model sports_detection_best.pt --confidence 0.5
-```
-
-### 3. Detecção em Imagem Estática
-
-```bash
-# Detecta pessoas em uma imagem
-python3 sports_detection_realtime.py --image path/to/image.jpg
-```
-
-### 4. Sistema Unificado
-
-```bash
-# Interface unificada com todas as funcionalidades
-python3 sports_detection_system.py
-```
-
-
-## 📊 Funcionalidades Detalhadas
-
-### 🏋️ Treinamento de Modelo (`sports_detection_training.py`)
-
-- **Dataset sintético**: Gera dados de treinamento automaticamente
-- **Suporte a datasets reais**: Importa dados de esportes existentes
-- **Configuração flexível**: Parâmetros de treinamento personalizáveis
-- **Exportação automática**: Salva modelo em formatos PyTorch e ONNX
-
-**Exemplo de uso:**
-```python
-from sports_detection_training import SportsDetectionTrainer
-
-# Cria treinador
-trainer = SportsDetectionTrainer(model_size="n")
-
-# Cria dataset sintético
-trainer.create_synthetic_dataset()
-
-# Treina modelo
-results = trainer.train_model(epochs=100, batch_size=16)
-```
-
-### 📁 Preparação de Dataset (`dataset_preparation.py`)
-
-- **Múltiplos formatos**: Suporte a YOLO, COCO, Pascal VOC
-- **Divisão automática**: Separa dados em treino/validação/teste
-- **Validação de integridade**: Verifica consistência dos dados
-- **Dataset sintético**: Gera dados de demonstração
-
-**Exemplo de uso:**
-```python
-from dataset_preparation import SportsDatasetPreparer
-
-# Prepara dataset customizado
-preparer = SportsDatasetPreparer()
-preparer.prepare_custom_dataset(
-    images_dir="path/to/images",
-    annotations_dir="path/to/annotations",
-    annotation_format="yolo"
-)
-```
-
-### 🔍 Validação de Modelo (`model_validation.py`)
-
-- **Métricas detalhadas**: mAP, precisão, recall
-- **Benchmark de performance**: FPS, tempo de inferência
-- **Análise de thresholds**: Testa diferentes níveis de confiança
-- **Comparação com baseline**: Compara com modelo padrão
-- **Visualizações**: Gráficos de performance
-
-**Exemplo de uso:**
-```python
-from model_validation import SportsModelValidator
-
-# Valida modelo
-validator = SportsModelValidator("sports_detection_best.pt")
-results = validator.validate_on_test_set()
-
-# Executa benchmark
-benchmark = validator.benchmark_performance("test_images/")
-```
-
-### 🎥 Detecção em Tempo Real (`sports_detection_realtime.py`)
-
-- **Interface visual**: Grade 3x3 com informações de ocupação
-- **Comandos de movimento**: Sistema baseado no followMe original
-- **Controles interativos**: Teclas para alternar visualizações
-- **Salvamento de vídeo**: Gravação de sessões de detecção
-- **Detecção em imagens**: Processamento de imagens estáticas
-
-**Controles de teclado:**
-- `q`: Sair
-- `g`: Alternar grade 3x3
-- `o`: Alternar informações de ocupação
-- `s`: Salvar frame atual
-- `p`: Alternar impressão da grade no terminal
-
-## ⚙️ Configuração Avançada
-
-### Parâmetros de Treinamento
-
-```python
-# Configuração personalizada de treinamento
-train_params = {
-    'epochs': 100,
-    'batch': 16,
-    'imgsz': 640,
-    'lr0': 0.01,
-    'momentum': 0.937,
-    'weight_decay': 0.0005,
-    'patience': 20
-}
-```
-
-### Configuração de Detecção
-
-```python
-# Parâmetros de detecção
-detector = SportsDetectionRealtime(
-    model_path="sports_detection_best.pt",
-    confidence_threshold=0.3
-)
-```
-
-## 📈 Métricas e Performance
-
-### Métricas de Validação
-
-- **mAP50**: Mean Average Precision com IoU 0.5
-- **mAP50-95**: Mean Average Precision com IoU 0.5-0.95
-- **Precision**: Precisão das detecções
-- **Recall**: Taxa de detecção
-
-### Performance em Tempo Real
-
-- **FPS**: Quadros por segundo
-- **Latência**: Tempo de inferência por frame
-- **Uso de memória**: Consumo de RAM/VRAM
 
 ## 🔧 Solução de Problemas
 
-### Problemas Comuns
+### 1. Dataset não encontrado
+```bash
+# Processa o dataset primeiro
+python3 redbull_dataset_processor.py
+```
 
-1. **Erro "externally-managed-environment"**
-   ```bash
-   # Solução: Use ambiente virtual
-   python3 setup_venv.py
-   ./activate_and_run.sh
-   ```
+### 2. Modelo não encontrado
+```bash
+# Treina o modelo
+python3 sports_detection_training.py
+```
 
-2. **Erro de câmera não encontrada**
-   ```bash
-   # Verifica câmeras disponíveis
-   ls /dev/video*
-   
-   # Usa câmera específica
-   python3 sports_detection_realtime.py --camera 1
-   ```
+### 3. Câmera não encontrada
+```bash
+# Verifica câmeras disponíveis
+ls /dev/video*
 
-3. **Modelo não encontrado**
-   ```bash
-   # Treina modelo primeiro
-   python3 sports_detection_training.py
-   
-   # Ou usa modelo padrão
-   python3 sports_detection_realtime.py --model yolov8n.pt
-   ```
+# Usa câmera específica (edite followMe.py)
+cap = cv2.VideoCapture(1)  # Mude o número
+```
 
-4. **Erro de dependências**
-   ```bash
-   # Com ambiente virtual
-   source venv/bin/activate
-   pip install -r requirements.txt --upgrade
-   
-   # Ou instalação direta
-   python3 -m pip install -r requirements.txt --upgrade
-   ```
+### 4. Dependências faltando
+```bash
+source venv/bin/activate
+pip install scikit-learn opencv-python ultralytics
+```
 
-5. **Problemas de permissão**
-   ```bash
-   # Torna scripts executáveis
-   chmod +x *.py
-   
-   # Ou executa diretamente
-   python3 script_name.py
-   ```
+## 📈 Performance
 
-### Logs e Debug
-
-- Logs de treinamento: `runs/detect/sports_detection/`
-- Resultados de validação: `benchmark_results.json`
-- Imagens de teste: `detection_results/`
+- **FPS**: ~15-20 FPS em CPU
+- **Latência**: ~50-80ms por frame
+- **Memória**: ~2-3 GB RAM
+- **Tamanho do modelo**: 6.3 MB (PyTorch), 11.7 MB (ONNX)
 
 ## 🤝 Contribuição
 
 1. Fork o projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
+2. Crie uma branch para sua feature
+3. Commit suas mudanças
+4. Push para a branch
 5. Abra um Pull Request
 
 ## 📄 Licença
 
-Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
+Este projeto está sob a licença MIT.
 
 ## 🙏 Agradecimentos
 
 - [Ultralytics](https://github.com/ultralytics/ultralytics) pelo YOLOv8
 - [OpenCV](https://opencv.org/) para processamento de imagem
-- Projeto followMe original pela base do sistema de comandos
-
-## 📞 Suporte
-
-Para dúvidas e suporte:
-
-- Abra uma [issue](https://github.com/your-repo/issues)
-- Consulte a [documentação](https://github.com/your-repo/wiki)
-- Entre em contato: [seu-email@exemplo.com]
+- Red Bull pelo conteúdo de esportes extremos
 
 ---
 
-**Desenvolvido com ❤️ para detecção de pessoas em esportes**
+**Desenvolvido com ❤️ para detecção de pessoas em esportes usando dataset Red Bull**

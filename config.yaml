@@ -56,6 +56,20 @@ dataset:
   
   # Formatos de anotação suportados
   supported_formats: ["yolo", "coco", "pascal_voc"]
+  
+  # Configurações específicas do Red Bull
+  redbull:
+    # Diretório dos vídeos do Red Bull
+    video_dir: "red-bull/src"
+    
+    # Intervalo entre frames extraídos
+    frame_interval: 30
+    
+    # Máximo de frames por vídeo
+    max_frames_per_video: 100
+    
+    # Threshold de confiança para detecção automática
+    detection_confidence: 0.4
 
 # Configurações de Detecção em Tempo Real
 realtime:
