@@ -67,7 +67,7 @@ class SportsDetectionTrainer:
         
         # Cria imagens sintéticas com pessoas fazendo esportes
         for split in ['train', 'val']:
-            for i in range(50 if split == 'train' else 20):
+            for i in range(70 if split == 'train' else 30):
                 # Cria uma imagem sintética
                 img = np.random.randint(0, 255, (640, 640, 3), dtype=np.uint8)
                 
@@ -241,7 +241,7 @@ def main():
     
     # Treina o modelo
     print("\n🚀 Iniciando treinamento...")
-    results = trainer.train_model(epochs=50, batch_size=8)
+    results = trainer.train_model(epochs=10, batch_size=8)
     
     if results:
         # Valida o modelo

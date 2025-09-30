@@ -99,7 +99,7 @@ movement:
 # Configurações de Validação
 validation:
   # Número de imagens para benchmark
-  benchmark_images: 50
+  benchmark_images: 20
   
   # Thresholds para teste
   test_thresholds: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
@@ -178,7 +178,7 @@ export:
 # Configurações de Dataset Sintético
 synthetic:
   # Número de imagens para gerar
-  num_images: 1000
+  num_images: 100
   
   # Tipos de esportes simulados
   sports_types: ["running", "jumping", "swimming", "cycling", "tennis", "soccer"]

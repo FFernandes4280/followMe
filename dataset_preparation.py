@@ -234,7 +234,7 @@ class SportsDatasetPreparer:
         
         print(f"✓ Configuração salva em: {config_path}")
     
-    def create_synthetic_sports_dataset(self, num_images: int = 1000):
+    def create_synthetic_sports_dataset(self, num_images: int = 100):
         """
         Cria um dataset sintético de esportes para demonstração
         

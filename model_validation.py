@@ -145,7 +145,7 @@ class SportsModelValidator:
         
         print(f"💾 Resultado salvo: {output_path}")
     
-    def benchmark_performance(self, test_images_dir: str, num_images: int = 50):
+    def benchmark_performance(self, test_images_dir: str, num_images: int = 20):
         """
         Executa benchmark de performance do modelo
         

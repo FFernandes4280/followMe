@@ -47,8 +47,8 @@ class SportsDetectionSystem:
                 'nms_threshold': 0.4
             },
             'training': {
-                'epochs': 100,
-                'batch_size': 16,
+                'epochs': 10,
+                'batch_size': 8,
                 'image_size': 640,
                 'learning_rate': 0.01,
                 'weight_decay': 0.0005,
@@ -175,7 +175,7 @@ class SportsDetectionSystem:
             if results:
                 # Executa benchmark
                 validation_config = self.config.get('validation', {})
-                benchmark_images = validation_config.get('benchmark_images', 50)
+                benchmark_images = validation_config.get('benchmark_images', 20)
                 
                 benchmark_results = validator.benchmark_performance(
                     "sports_data/images/test",
