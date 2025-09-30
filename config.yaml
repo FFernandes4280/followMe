@@ -1,0 +1,194 @@
+# Configuração do Sistema de Detecção de Pessoas em Esportes
+# Edite este arquivo para personalizar o comportamento do sistema
+
+# Configurações do Modelo
+model:
+  # Tamanho do modelo YOLO ('n', 's', 'm', 'l', 'x')
+  size: "n"
+  
+  # Caminho para o modelo treinado
+  path: "sports_detection_best.pt"
+  
+  # Threshold de confiança para detecções
+  confidence_threshold: 0.3
+  
+  # Threshold de NMS (Non-Maximum Suppression)
+  nms_threshold: 0.4
+
+# Configurações de Treinamento
+training:
+  # Número de épocas
+  epochs: 10
+  
+  # Tamanho do batch
+  batch_size: 16
+  
+  # Tamanho da imagem de entrada
+  image_size: 640
+  
+  # Taxa de aprendizado inicial
+  learning_rate: 0.01
+  
+  # Peso da regularização L2
+  weight_decay: 0.0005
+  
+  # Paciência para early stopping
+  patience: 20
+  
+  # Dispositivo de treinamento ('cpu', 'cuda', 'auto')
+  device: "auto"
+
+# Configurações de Dataset
+dataset:
+  # Diretório base dos dados
+  base_dir: "sports_data"
+  
+  # Proporção de divisão treino/validação/teste
+  train_ratio: 0.7
+  val_ratio: 0.15
+  test_ratio: 0.15
+  
+  # Número de classes
+  num_classes: 1
+  
+  # Nomes das classes
+  class_names: ["person_sporting"]
+  
+  # Formatos de anotação suportados
+  supported_formats: ["yolo", "coco", "pascal_voc"]
+
+# Configurações de Detecção em Tempo Real
+realtime:
+  # ID da câmera
+  camera_id: 0
+  
+  # Resolução da câmera
+  width: 640
+  height: 480
+  
+  # Mostrar grade 3x3 por padrão
+  show_grid: true
+  
+  # Mostrar informações de ocupação por padrão
+  show_occupation: true
+  
+  # Salvar vídeo de saída
+  save_video: false
+  
+  # Diretório para salvar resultados
+  output_dir: "detection_results"
+
+# Configurações do Sistema de Comandos
+movement:
+  # Threshold para comandos de movimento
+  threshold: 0.15
+  
+  # Threshold alto para ocupação
+  high_occupation: 0.6
+  
+  # Comandos disponíveis
+  commands:
+    - "SEGUIR_FRENTE"
+    - "VIRAR_ESQUERDA"
+    - "VIRAR_DIREITA"
+    - "INCLINAR_PARA_CIMA"
+    - "INCLINAR_PARA_BAIXO"
+    - "RECUAR"
+    - "Alvo perdido"
+
+# Configurações de Validação
+validation:
+  # Número de imagens para benchmark
+  benchmark_images: 50
+  
+  # Thresholds para teste
+  test_thresholds: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+  
+  # Salvar gráficos de performance
+  save_plots: true
+  
+  # Formato dos gráficos
+  plot_format: "png"
+  plot_dpi: 300
+
+# Configurações de Logging
+logging:
+  # Nível de log ('DEBUG', 'INFO', 'WARNING', 'ERROR')
+  level: "INFO"
+  
+  # Salvar logs em arquivo
+  save_to_file: true
+  
+  # Diretório de logs
+  log_dir: "logs"
+  
+  # Formato do log
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+# Configurações de Performance
+performance:
+  # Usar GPU se disponível
+  use_gpu: true
+  
+  # Número de threads para processamento
+  num_threads: 4
+  
+  # Tamanho da fila de processamento
+  queue_size: 10
+  
+  # Timeout para operações (segundos)
+  timeout: 30
+
+# Configurações de Visualização
+visualization:
+  # Cores para bounding boxes (BGR)
+  bbox_color: [0, 255, 0]
+  
+  # Espessura da linha da bounding box
+  bbox_thickness: 2
+  
+  # Cor da grade (BGR)
+  grid_color: [255, 255, 255]
+  
+  # Espessura da linha da grade
+  grid_thickness: 1
+  
+  # Transparência da ocupação (0.0 a 1.0)
+  occupation_alpha: 0.3
+  
+  # Fonte para texto
+  font: "FONT_HERSHEY_SIMPLEX"
+  font_scale: 0.5
+  font_thickness: 1
+
+# Configurações de Exportação
+export:
+  # Formatos de exportação suportados
+  formats: ["onnx", "torchscript", "tflite"]
+  
+  # OpSet para ONNX
+  onnx_opset: 12
+  
+  # Simplificar modelo ONNX
+  simplify_onnx: true
+  
+  # Quantização para TFLite
+  quantize_tflite: false
+
+# Configurações de Dataset Sintético
+synthetic:
+  # Número de imagens para gerar
+  num_images: 1000
+  
+  # Tipos de esportes simulados
+  sports_types: ["running", "jumping", "swimming", "cycling", "tennis", "soccer"]
+  
+  # Dimensões das imagens sintéticas
+  image_width: 640
+  image_height: 640
+  
+  # Adicionar ruído às imagens
+  add_noise: true
+  
+  # Intensidade do ruído (-20 a 20)
+  noise_intensity: 10

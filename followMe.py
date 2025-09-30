@@ -4,7 +4,7 @@ import numpy as np
 
 net = cv2.dnn.readNetFromONNX("yolov8n.onnx")
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0, cv2.CAP_V4L2)
 
 def calculate_grid_occupation(boxes, indices, image_width, image_height):
     # Calcula ocupação de cada quadrado da grade 3x3
@@ -96,12 +96,19 @@ while True:
     blob = cv2.dnn.blobFromImage(detection_frame, 1/255.0, (640, 640), swapRB=True, crop=False)
     net.setInput(blob)
 
-    outputs = net.forward()
-    outputs = outputs[0]  
-    
-    # Transpõe se necessário para ter formato (num_detections, num_values)
-    if outputs.shape[0] == 84:  # Se está no formato (84, 8400)
-        outputs = outputs.T  # Transpõe para (8400, 84)
+    try:
+        outputs = net.forward()
+        print(f"Model output shape: {outputs.shape}")
+        outputs = outputs[0]  
+        print(f"First output shape: {outputs.shape}")
+        
+        # Transpõe se necessário para ter formato (num_detections, num_values)
+        if outputs.shape[0] == 84:  # Se está no formato (84, 8400)
+            outputs = outputs.T  # Transpõe para (8400, 84)
+            print(f"After transpose: {outputs.shape}")
+    except Exception as e:
+        print(f"Error in model forward: {e}")
+        continue
 
     rows = outputs.shape[0]
     boxes, confidences, class_ids = [], [], []
