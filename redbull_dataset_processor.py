@@ -87,7 +87,7 @@ class RedBullDatasetProcessor:
                     # Salva frame
                     frame_filename = f"{video_path.stem}_frame_{frame_count:06d}.jpg"
                     frame_path = self.output_dir / "raw_frames" / frame_filename
-                    cv2.imwrite(str(frame_path), frame_resized)
+                    cv2.imwrite(str(frame_path), frame_resized, [cv2.IMWRITE_JPEG_QUALITY, 70]) # <--- 70% de compressão JPEG
                     
                     extracted_count += 1
                     total_frames += 1
@@ -129,7 +129,7 @@ class RedBullDatasetProcessor:
                 continue
             
             # Detecta pessoas
-            results = self.detection_model(frame, conf=confidence_threshold, classes=[0])  # classe 0 = person
+            results = self.detection_model(frame, conf=confidence_threshold, classes=[0]) # classe 0 = person
             
             # Processa detecções
             annotations = []
@@ -327,9 +327,9 @@ def main():
     
     # Processa dataset
     success = processor.process_redbull_dataset(
-        frame_interval=30,        # Extrai a cada 30 frames (1 frame por segundo)
-        max_frames_per_video=50,  # Máximo 50 frames por vídeo
-        confidence_threshold=0.4  # Threshold de confiança para detecções
+        frame_interval=1,          # Extrai todos os frames do vídeo (1 frame por frame)
+        max_frames_per_video=1800, # Máximo 1800 frames por vídeo (1 minuto de vídeo)
+        confidence_threshold=0.4   # Threshold de confiança para detecções
     )
     
     if success:
