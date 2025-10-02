@@ -77,8 +77,8 @@ realtime:
   camera_id: 0
   
   # Resolução da câmera
-  width: 640
-  height: 480
+  width: 720
+  height: 1280
   
   # Mostrar grade 3x3 por padrão
   show_grid: true

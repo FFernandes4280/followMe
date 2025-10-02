@@ -77,8 +77,8 @@ if not cap.isOpened():
     print("Erro: Não foi possível abrir a câmera")
     exit()
 
-cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 720)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1280)
 print("Sistema de comandos PID por grade 3x3. Pressione 'q' para sair. Pressione 'o' para alternar impressão da grade no terminal. Pressione 'c' para alternar modo colorido/preto e branco.")
 
 frame_count = 0

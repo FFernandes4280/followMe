@@ -41,7 +41,7 @@ class SportsDetectionRealtime:
             print(f"❌ Erro ao carregar modelo: {e}")
             raise
     
-    def setup_camera(self, camera_id=0, width=640, height=480):
+    def setup_camera(self, camera_id=0, width=720, height=1280):
         """
         Configura a câmera
         
@@ -225,7 +225,7 @@ class SportsDetectionRealtime:
         video_writer = None
         if save_video:
             fourcc = cv2.VideoWriter_fourcc(*'XVID')
-            video_writer = cv2.VideoWriter('sports_detection_output.avi', fourcc, 20.0, (640, 480))
+            video_writer = cv2.VideoWriter('sports_detection_output.avi', fourcc, 20.0, (720, 1280))
         
         frame_count = 0
         movement_threshold = 0.15

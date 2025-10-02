@@ -259,8 +259,8 @@ int main(int argc, char** argv) {
     }
     
     // Configurações da câmera
-    cap.set(CAP_PROP_FRAME_WIDTH, 640);
-    cap.set(CAP_PROP_FRAME_HEIGHT, 480);
+    cap.set(CAP_PROP_FRAME_WIDTH, 720);
+    cap.set(CAP_PROP_FRAME_HEIGHT, 1280);
     
     cout << "=== CONTROLES ===" << endl;
     cout << "'q' - Sair" << endl;
