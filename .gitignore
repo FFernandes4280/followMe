@@ -2,7 +2,6 @@
 runs/
 sports_data/
 *.pt
-*.onnx
 *.weights
 
 # Ambiente virtual
