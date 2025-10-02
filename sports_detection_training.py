@@ -103,7 +103,7 @@ class SportsDetectionTrainer:
         print("✓ Dataset sintético criado com sucesso!")
     
     
-    def train_model(self, epochs=100, batch_size=16, img_size=640):
+    def train_model(self, epochs=100000, batch_size=16, img_size=640):
         """
         Treina o modelo YOLOv8 para detecção de pessoas em esportes
         
@@ -257,7 +257,7 @@ def main():
     
     # Treina o modelo
     print("\n🚀 Iniciando treinamento...")
-    results = trainer.train_model(epochs=100000, batch_size=8) # <--- 20000 gerações
+    results = trainer.train_model(epochs=100000, batch_size=8) # <--- 100000 gerações
     
     if results:
         # Copia o modelo para o diretório principal

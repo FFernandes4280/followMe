@@ -328,7 +328,7 @@ def main():
     # Processa dataset
     success = processor.process_redbull_dataset(
         frame_interval=1,          # Extrai todos os frames do vídeo (1 frame por frame)
-        max_frames_per_video=1800, # Máximo 1800 frames por vídeo (1 minuto de vídeo)
+        max_frames_per_video=3600, # Máximo 3600 frames por vídeo (2 minutos de vídeo)
         confidence_threshold=0.4   # Threshold de confiança para detecções
     )
     
