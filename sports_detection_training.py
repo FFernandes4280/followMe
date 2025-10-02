@@ -257,7 +257,7 @@ def main():
     
     # Treina o modelo
     print("\n🚀 Iniciando treinamento...")
-    results = trainer.train_model(epochs=10, batch_size=8)
+    results = trainer.train_model(epochs=100000, batch_size=8) # <--- 20000 gerações
     
     if results:
         # Copia o modelo para o diretório principal
