@@ -574,12 +574,6 @@ def main():
                         help='Caminho para o modelo ONNX (ex: long.onnx ou short.onnx)')
     parser.add_argument('--source', type=str, default='0',
                         help='Fonte de vídeo (0 para webcam, ou caminho para vídeo)')
-    parser.add_argument('--headless', action='store_true',
-                        help='Executa sem janela de visualização (útil em servidores sem GUI)')
-    parser.add_argument('--output', type=str, default=None,
-                        help='Caminho do arquivo para salvar o vídeo de saída (ex: videos/output.mp4)')
-    parser.add_argument('--max-frames', type=int, default=0, dest='max_frames',
-                        help='Processa no máximo N frames (0 = sem limite). Útil para testes rápidos.')
     
     args = parser.parse_args()
     
@@ -598,21 +592,12 @@ def main():
     # Aumenta a resolução para visualização melhor
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
-    input_fps = cap.get(cv2.CAP_PROP_FPS) or 30.0
     
     frame_count = 0
     movement_threshold = 0.15
-    print_occupation_grid = False
-    show_grid_overlay = True  # Always show grid with visual feedback
-    show_drone_view = True  # Mostra a visão do drone
+    show_grid_overlay = True
+    show_drone_view = True
     paused = False
-    num_classes = None
-    
-    # Detecta se GUI está disponível; força headless se DISPLAY não existir (Linux) ou se usuário solicitou
-    headless = args.headless or (os.name != 'nt' and os.environ.get('DISPLAY') in (None, ''))
-    video_writer = None
-    writer_path = args.output
-    announced_headless = False
     
     # Inicializa o drone simulado (será configurado após primeiro frame)
     # Visão maior para encontrar alvo mais rápido
@@ -632,15 +617,6 @@ def main():
             
             frame_count += 1
             image_height, image_width = frame.shape[:2]
-            
-            # Inicializa VideoWriter no primeiro frame, se necessário
-            if headless and writer_path and video_writer is None:
-                fourcc = cv2.VideoWriter_fourcc(*'mp4v') if writer_path.lower().endswith('.mp4') else cv2.VideoWriter_fourcc(*'XVID')
-                fps = input_fps if input_fps and input_fps > 0 else 30.0
-                video_writer = cv2.VideoWriter(writer_path, fourcc, fps, (image_width, image_height))
-                if not announced_headless:
-                    print(f"[INFO] Modo headless ativo. Gravando saída em: {writer_path}")
-                    announced_headless = True
             
             # Prepara frame para detecção
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -662,9 +638,6 @@ def main():
                 conf_threshold=0.3,
                 target_class=None
             )
-            
-            if num_classes is None:
-                num_classes = detected_classes
             
             # Converte boxes para pixels
             boxes = scale_boxes(
@@ -712,8 +685,10 @@ def main():
                     drone_targets = last_drone_targets.copy()
                     print(f"[TRACK] Mantendo último movimento (frame {frames_without_target}/30)")
                 else:
-                    # Após 30 frames sem alvo, para de se mover
-                    drone_targets = {'move_x': 0, 'move_y': 0, 'zoom_delta': 0}
+                    # Após 30 frames sem alvo, zoom out para encontrar o alvo
+                    movement_commands = ["PROCURANDO_ALVO"]
+                    drone_targets = {'move_x': 0, 'move_y': 0, 'zoom_delta': -0.05}
+                    print(f"[SEARCH] Zoom out para procurar alvo (frame {frames_without_target})")
             else:
                 # Alvo encontrado: salva comandos e reseta contador
                 if movement_commands:  # Só salva se houver comandos válidos
@@ -759,67 +734,31 @@ def main():
             draw_hud(display_frame, drone, movement_commands, velocity_x, velocity_y, frame_count)
             
             # Extrai e mostra a visão do drone em janela separada
-            if show_drone_view and not headless:
+            if show_drone_view:
                 drone_view_frame = extract_drone_view(display_frame, drone)
-                try:
-                    cv2.imshow("Drone Camera View", drone_view_frame)
-                except cv2.error:
-                    pass
+                cv2.imshow("Drone Camera View", drone_view_frame)
             
-            if headless:
-                # Sem GUI: grava o frame se configurado
-                if video_writer is not None:
-                    video_writer.write(display_frame)
-            else:
-                # Com GUI: tenta exibir; se falhar, alterna para headless
-                try:
-                    cv2.imshow("Rastreamento Customizado", display_frame)
-                except cv2.error as e:
-                    # Alterna para headless e inicia gravação se caminho foi fornecido
-                    headless = True
-                    if writer_path and video_writer is None:
-                        fourcc = cv2.VideoWriter_fourcc(*'mp4v') if writer_path.lower().endswith('.mp4') else cv2.VideoWriter_fourcc(*'XVID')
-                        fps = input_fps if input_fps and input_fps > 0 else 30.0
-                        video_writer = cv2.VideoWriter(writer_path, fourcc, fps, (image_width, image_height))
-                    if not announced_headless:
-                        print("[AVISO] Backend de GUI indisponível. Alternando para modo headless.")
-                        if writer_path:
-                            print(f"[INFO] Gravando saída em: {writer_path}")
-                        announced_headless = True
-                    if video_writer is not None:
-                        video_writer.write(display_frame)
+            # Mostra frame principal
+            cv2.imshow("Rastreamento Customizado", display_frame)
         else:
             # Modo pausado - continua mostrando o último frame
-            if not headless:
-                try:
-                    cv2.imshow("Rastreamento Customizado", display_frame)
-                except cv2.error:
-                    pass
+            cv2.imshow("Rastreamento Customizado", display_frame)
         
-        # Controles de teclado apenas quando GUI estiver ativa
-        if not headless:
-            key = cv2.waitKey(1) & 0xFF
-            if key == ord("q"):
-                break
-            elif key == ord("o"):
-                print_occupation_grid = not print_occupation_grid
-            elif key == ord("g"):
-                show_grid_overlay = not show_grid_overlay
-            elif key == ord("p"):
-                paused = not paused
-            elif key == ord("d"):
-                show_drone_view = not show_drone_view
-                print(f"[INFO] Visualização do drone: {'Ativada' if show_drone_view else 'Desativada'}")
-        
-        # Limita número de frames processados quando --max-frames > 0
-        if args.max_frames > 0 and frame_count >= args.max_frames:
-            print(f"[INFO] Encerrando após processar {frame_count} frames por limite configurado.")
+        # Controles de teclado
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
             break
+        elif key == ord("g"):
+            show_grid_overlay = not show_grid_overlay
+        elif key == ord("p"):
+            paused = not paused
+        elif key == ord("d"):
+            show_drone_view = not show_drone_view
+            print(f"[INFO] Visualização do drone: {'Ativada' if show_drone_view else 'Desativada'}")
     
     cap.release()
-    if video_writer is not None:
-        video_writer.release()
     cv2.destroyAllWindows()
+    print(f"\n[INFO] Total de frames processados: {frame_count}")
 
 if __name__ == "__main__":
     main()
