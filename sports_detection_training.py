@@ -124,9 +124,9 @@ class SportsDetectionTrainer:
         # Parâmetros de treinamento
         train_params = {
             'data': str(dataset_config),
-            'epochs': epochs,
-            'batch': batch_size,
-            'imgsz': img_size,
+            'epochs': epochs, # 100
+            'batch': batch_size, # 8
+            'imgsz': img_size, # 768 (...~4gb VRAM)
             'device': 'cuda' if torch.cuda.is_available() else 'cpu',
             'project': 'runs/detect',
             'name': 'sports_detection',
@@ -134,7 +134,7 @@ class SportsDetectionTrainer:
             'save_period': 10,
             'patience': 30, # 20 -> 30
             'lr0': 0.005, # 0.01 -> 0.005
-            'lrf': 0.1, # 0.01 -> 0.1: dataset pequeno
+            'lrf': 0.1, # 0.01 -> 0.1
             'momentum': 0.937,
             'weight_decay': 0.0005,
             'warmup_epochs': 1, # 3 -> 1
@@ -157,7 +157,7 @@ class SportsDetectionTrainer:
             'perspective': 0.0,
             'flipud': 0.0,
             'fliplr': 0.5,
-            'mosaic': 0.5, # 1.0 -> 0.5: pelo dataset ser gerado a partir de vídeos, os frames podem ser parecidos.
+            'mosaic': 0.5, # 1.0 -> 0.5
             'mixup': 0.0,
             'copy_paste': 0.0
         }
