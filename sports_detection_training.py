@@ -103,7 +103,7 @@ class SportsDetectionTrainer:
         print("✓ Dataset sintético criado com sucesso!")
     
     
-    def train_model(self, epochs=100000, batch_size=16, img_size=640):
+    def train_model(self, epochs=100, batch_size=8, img_size=640):
         """
         Treina o modelo YOLOv8 para detecção de pessoas em esportes
         
@@ -132,12 +132,12 @@ class SportsDetectionTrainer:
             'name': 'sports_detection',
             'save': True,
             'save_period': 10,
-            'patience': 20,
-            'lr0': 0.01,
-            'lrf': 0.01,
+            'patience': 30, # 20 -> 30
+            'lr0': 0.005, # 0.01 -> 0.005
+            'lrf': 0.1, # 0.01 -> 0.1: dataset pequeno
             'momentum': 0.937,
             'weight_decay': 0.0005,
-            'warmup_epochs': 3,
+            'warmup_epochs': 1, # 3 -> 1
             'warmup_momentum': 0.8,
             'warmup_bias_lr': 0.1,
             'box': 7.5,
@@ -151,13 +151,13 @@ class SportsDetectionTrainer:
             'hsv_s': 0.7,
             'hsv_v': 0.4,
             'degrees': 0.0,
-            'translate': 0.1,
-            'scale': 0.5,
+            'translate': 0.2,
+            'scale': 0.5, # 0.8 -> 0.5
             'shear': 0.0,
             'perspective': 0.0,
             'flipud': 0.0,
             'fliplr': 0.5,
-            'mosaic': 1.0,
+            'mosaic': 0.5, # 1.0 -> 0.5: pelo dataset ser gerado a partir de vídeos, os frames podem ser parecidos.
             'mixup': 0.0,
             'copy_paste': 0.0
         }
@@ -257,7 +257,7 @@ def main():
     
     # Treina o modelo
     print("\n🚀 Iniciando treinamento...")
-    results = trainer.train_model(epochs=100000, batch_size=8) # <--- 100000 gerações
+    results = trainer.train_model(epochs=100, batch_size=8, img_size=768) # img_size=640 -> img_size=768
     
     if results:
         # Copia o modelo para o diretório principal
