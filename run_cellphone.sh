@@ -8,7 +8,7 @@ echo ""
 
 python3 followMe_cellphone.py \
     --model long.onnx \
-    --source http://192.168.3.43:8080/video
+    --source http://192.168.116.34:8080/video
 
 echo ""
 echo "✓ Encerrado"
